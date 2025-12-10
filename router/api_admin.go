@@ -9,10 +9,10 @@ import (
 func RegisterAdminRouteGroup(r *Router, root *gin.RouterGroup) {
 
 	// 后台中间件
-	adminRoot := root.Group("/admindo", middleware.AdminAuthMiddleware(r.SpanFilter, func(ctx *gin.Context, token string) (*common.AdminUser, error) {
+	adminRoot := root.Group("/admin", middleware.AdminAuthMiddleware(r.SpanFilter, func(ctx *gin.Context, token string) (*common.AdminUser, error) {
 		return &common.AdminUser{
 			UserId: 1,
-			Name:   "admindo",
+			Name:   "admin",
 		}, nil
 	}))
 
