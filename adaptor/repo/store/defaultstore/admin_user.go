@@ -1,23 +1,28 @@
-package store
+package defaultstore
 
 import (
 	"context"
 	"gin-gorm-frame/adaptor"
 	"gin-gorm-frame/adaptor/repo/model"
 	"gin-gorm-frame/adaptor/repo/query"
+	"gin-gorm-frame/adaptor/repo/store"
 	"gin-gorm-frame/do/admindo"
 	"time"
 )
 
 type AdminUser struct {
-	BaseRepo
+	store.DbBaseRepo
+	store.RedisBaseRepo
 }
 
 func NewAdminUser(adaptor adaptor.IAdaptor) *AdminUser {
+
 	return &AdminUser{
-		BaseRepo: BaseRepo{
-			db:    adaptor.GetDB(),
-			redis: adaptor.GetRedis(),
+		DbBaseRepo: store.DbBaseRepo{
+			Db: adaptor.GetDB(dbAlias),
+		},
+		RedisBaseRepo: store.RedisBaseRepo{
+			Redis: adaptor.GetRedis(),
 		},
 	}
 }
@@ -31,7 +36,7 @@ func (a *AdminUser) CreateUser(ctx context.Context, req *admindo.CreateUser) (in
 
 	timeNow := time.Now().UnixMilli() // 获取当前时间戳（毫秒）
 
-	qs := query.Use(a.db).AdminUser
+	qs := query.Use(a.Db).AdminUser
 
 	addObj := &model.AdminUser{
 		Name:      req.Name,

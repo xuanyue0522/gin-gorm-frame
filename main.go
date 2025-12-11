@@ -15,13 +15,13 @@ func main() {
 	app := initApp()
 
 	// 启动http服务
-	server.StartHttpServer(app.conf, app.dbClient, app.rdsClient)
+	server.StartHttpServer(app.conf, app.dbMapClient, app.rdsClient)
 }
 
 type app struct {
-	conf      *config.Config
-	dbClient  *gorm.DB
-	rdsClient *redis.Client
+	conf        *config.Config
+	dbMapClient map[string]*gorm.DB
+	rdsClient   *redis.Client
 }
 
 // 初始化应用
@@ -33,11 +33,9 @@ func initApp() *app {
 	logger.SetLevel(conf.Server.LogLevel)
 
 	// 初始化mysql
-	dbClient, err := config.InitMysql(&conf.Mysql)
-	// 处理错误
-	tools.HandlePanicError(err)
+	dbMapClient := config.InitMysql(conf.Db)
 	// 记录日志
-	logger.Debug("mysql connect success")
+	logger.Debug("all db(mysql) connect success")
 
 	// 初始化redis
 	rdsClient, err := config.InitRedis(&conf.Redis)
@@ -45,8 +43,8 @@ func initApp() *app {
 	logger.Debug("redis connect success")
 
 	return &app{
-		conf:      conf,
-		dbClient:  dbClient,
-		rdsClient: rdsClient,
+		conf:        conf,
+		dbMapClient: dbMapClient,
+		rdsClient:   rdsClient,
 	}
 }

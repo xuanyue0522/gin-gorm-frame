@@ -44,6 +44,7 @@ func (r *Router) registerServiceRouteGroup(root *gin.RouterGroup) {
 	RegisterAdminRouteGroup(r, root)
 }
 
+// 检测服务器是否正常运行
 func (r *Router) checkServer() func(*gin.Context) {
 	return func(ctx *gin.Context) {
 		err := r.checkFunc()

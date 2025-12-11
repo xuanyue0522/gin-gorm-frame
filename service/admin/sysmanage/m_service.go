@@ -2,13 +2,13 @@ package sysmanage
 
 import (
 	"gin-gorm-frame/adaptor"
-	"gin-gorm-frame/adaptor/repo/store"
+	"gin-gorm-frame/adaptor/repo/store/defaultstore"
 )
 
 type Service struct {
 
 	// 后台用户
-	adminUser store.IAdminUser
+	adminUser defaultstore.IAdminUser
 }
 
 func RegisterService(adaptor adaptor.IAdaptor) *Service {
@@ -16,6 +16,6 @@ func RegisterService(adaptor adaptor.IAdaptor) *Service {
 	return &Service{
 
 		// 注册后台用户repo
-		adminUser: store.NewAdminUser(adaptor),
+		adminUser: defaultstore.NewAdminUser(adaptor),
 	}
 }

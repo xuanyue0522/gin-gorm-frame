@@ -23,9 +23,9 @@ var (
 )
 
 type Config struct {
-	Server Server `yaml:"server"`
-	Mysql  Mysql  `yaml:"mysql"`
-	Redis  Redis  `yaml:"redis"`
+	Server Server          `yaml:"server"`
+	Db     []*DbItemConfig `yaml:"db"`
+	Redis  Redis           `yaml:"redis"`
 }
 
 func init() {

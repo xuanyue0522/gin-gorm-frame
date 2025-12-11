@@ -5,7 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
-type BaseRepo struct {
-	db    *gorm.DB
-	redis *redis.Client
+type DbBaseRepo struct {
+	Db *gorm.DB
+}
+
+type RedisBaseRepo struct {
+	Redis *redis.Client
 }
