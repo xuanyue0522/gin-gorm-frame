@@ -1,19 +1,18 @@
-package defaultstore
+package store
 
 import (
 	"context"
 	"gin-gorm-frame/adaptor"
 	"gin-gorm-frame/adaptor/redis"
-	"gin-gorm-frame/adaptor/repo/model"
-	"gin-gorm-frame/adaptor/repo/query"
-	"gin-gorm-frame/adaptor/repo/store"
-	"gin-gorm-frame/do/admindo"
+	"gin-gorm-frame/adaptor/repo/default/model"
+	"gin-gorm-frame/adaptor/repo/default/query"
+	"gin-gorm-frame/do/admin"
 	"time"
 )
 
 type AdminUser struct {
-	store.DbBaseRepo
-	store.RedisBaseRepo
+	DbBaseRepo
+	RedisBaseRepo
 }
 
 func NewAdminUser(adaptor adaptor.IAdaptor) *AdminUser {
@@ -24,21 +23,21 @@ func NewAdminUser(adaptor adaptor.IAdaptor) *AdminUser {
 	}
 
 	return &AdminUser{
-		DbBaseRepo: store.DbBaseRepo{
+		DbBaseRepo: DbBaseRepo{
 			Db: adaptor.GetDB(dbAlias),
 		},
-		RedisBaseRepo: store.RedisBaseRepo{
+		RedisBaseRepo: RedisBaseRepo{
 			Redis: redisClient,
 		},
 	}
 }
 
 type IAdminUser interface {
-	CreateUser(ctx context.Context, req *admindo.CreateUser) (int64, error)
+	CreateUser(ctx context.Context, req *admin.CreateUser) (int64, error)
 }
 
 // CreateUser 创建后台用户
-func (a *AdminUser) CreateUser(ctx context.Context, req *admindo.CreateUser) (int64, error) {
+func (a *AdminUser) CreateUser(ctx context.Context, req *admin.CreateUser) (int64, error) {
 
 	timeNow := time.Now().UnixMilli() // 获取当前时间戳（毫秒）
 
