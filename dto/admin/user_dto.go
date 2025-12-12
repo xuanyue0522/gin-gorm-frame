@@ -1,4 +1,4 @@
-package admindto
+package admin
 
 type CreateUserReq struct {
 	Name     string `json:"name"`

@@ -4,8 +4,8 @@ import (
 	"gin-gorm-frame/config"
 	"gin-gorm-frame/server"
 	"gin-gorm-frame/utils/logger"
-	"gin-gorm-frame/utils/tools"
 	"github.com/go-redis/redis"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -15,13 +15,13 @@ func main() {
 	app := initApp()
 
 	// 启动http服务
-	server.StartHttpServer(app.conf, app.dbClient, app.rdsClient)
+	server.StartHttpServer(app.conf, app.dbMapClient, app.rdsMapClient)
 }
 
 type app struct {
-	conf      *config.Config
-	dbClient  *gorm.DB
-	rdsClient *redis.Client
+	conf         *config.Config
+	dbMapClient  map[string]*gorm.DB
+	rdsMapClient map[string]*redis.Client
 }
 
 // 初始化应用
@@ -33,20 +33,23 @@ func initApp() *app {
 	logger.SetLevel(conf.Server.LogLevel)
 
 	// 初始化mysql
-	dbClient, err := config.InitMysql(&conf.Mysql)
-	// 处理错误
-	tools.HandlePanicError(err)
+	dbMapClient, dbErrList := config.InitMysql(conf.Db.DefaultAlias, conf.Db.Connections)
+	if len(dbErrList) > 0 {
+		logger.Error("mysql connect error", zap.Errors("errList", dbErrList))
+	}
 	// 记录日志
-	logger.Debug("mysql connect success")
+	logger.Debug("all db(mysql) connect success")
 
 	// 初始化redis
-	rdsClient, err := config.InitRedis(&conf.Redis)
-	tools.HandlePanicError(err)
+	rdsMapClient, redisErrList := config.InitRedis(conf.Redis.DefaultAlias, conf.Redis.Connections)
+	if len(redisErrList) > 0 {
+		logger.Error("redis connect error", zap.Errors("errList", redisErrList))
+	}
 	logger.Debug("redis connect success")
 
 	return &app{
-		conf:      conf,
-		dbClient:  dbClient,
-		rdsClient: rdsClient,
+		conf:         conf,
+		dbMapClient:  dbMapClient,
+		rdsMapClient: rdsMapClient,
 	}
 }

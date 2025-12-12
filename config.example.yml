@@ -1,0 +1,56 @@
+# http 服务
+server:
+  http_port: 8081
+  enable_pprof: true
+  log_level: debug
+  env: dev
+
+# db 数据库(至少有一个数据库别名是 default)
+db:
+  default_alias: default
+  connections:
+    - db1:
+      alias: default
+      dialect: mysql
+      user: root
+      password: 123456
+      host: 127.0.0.1
+      port: 3306
+      database: gin-gorm-frame
+      charset: utf8mb4
+      show_mysql: true
+      max_open: 20
+      max_idle: 5
+
+    - db2:
+      alias: db2
+      dialect: mysql
+      user: root
+      password: 123456
+      host: 127.0.0.1
+      port: 3306
+      database: gin-gorm-frame
+      charset: utf8mb4
+      show_mysql: true
+      max_open: 20
+      max_idle: 5
+
+# redis (至少有一个连接别名是 default)
+redis:
+  default_alias: default
+  connections:
+    - redis1:
+      alias: default
+      addr: 127.0.0.1:6479
+      password: ""
+      db_index: 15
+      max_idle: 2
+      max_open: 10
+
+    - redis2:
+      alias: session
+      addr: 127.0.0.1:6479
+      password: ""
+      db_index: 14
+      max_idle: 2
+      max_open: 10

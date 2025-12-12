@@ -2,12 +2,12 @@ package router
 
 // AdminAuthWhiteList 管理后台认证白名单
 var AdminAuthWhiteList = map[string]bool{
-	"/ping":                                  true,
-	"/metrics":                               true,
-	"/admindo/v1/verify/captcha/check":       true,
-	"/admindo/v1/verify/captcha":             true,
-	"/admindo/v1/user/verify/smscode":        true,
-	"/admindo/v1/user/mobile/verify_login":   true,
-	"/admindo/v1/user/mobile/password_login": true,
-	"/admindo/v1/user/password/reset":        true,
+	"/ping":                                true,
+	"/metrics":                             true,
+	"/admin/v1/verify/captcha/check":       true,
+	"/admin/v1/verify/captcha":             true,
+	"/admin/v1/user/verify/smscode":        true,
+	"/admin/v1/user/mobile/verify_login":   true,
+	"/admin/v1/user/mobile/password_login": true,
+	"/admin/v1/user/password/reset":        true,
 }
