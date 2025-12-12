@@ -10,9 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// 默认的db别名
-var defaultDbAlias = "default"
-
 // DbItemConfig 配置
 type DbItemConfig struct {
 	Alias     string `yaml:"alias"`
@@ -28,6 +25,11 @@ type DbItemConfig struct {
 	MaxIdle   int    `yaml:"max_idle"`
 }
 
+type DbConfig struct {
+	DefaultAlias string          `yaml:"default_alias"`
+	Connections  []*DbItemConfig `yaml:"connections"`
+}
+
 // getDsn 获取数据库连接字符串
 func getDsn(dbItem *DbItemConfig) string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
@@ -35,12 +37,13 @@ func getDsn(dbItem *DbItemConfig) string {
 }
 
 // InitMysql 初始化mysql
-func InitMysql(dbItemList []*DbItemConfig) map[string]*gorm.DB {
+func InitMysql(defaultDbAlias string, dbItemList []*DbItemConfig) (map[string]*gorm.DB, []error) {
 
 	// 是否含有默认的db别名
 	var haveDefaultDbAlias bool = false
 
 	dbMapClient := make(map[string]*gorm.DB)
+	var errList []error
 
 	for _, conf := range dbItemList {
 
@@ -51,22 +54,19 @@ func InitMysql(dbItemList []*DbItemConfig) map[string]*gorm.DB {
 
 		db, err := gorm.Open(mysql.Open(dsn))
 		if err != nil {
-			// 处理错误
-			tools.HandlePanicError(err)
-			return nil
+			errList = append(errList, err)
+			continue
 		}
 
 		sqlDb, err := db.DB()
 		if err != nil {
-			// 处理错误
-			tools.HandlePanicError(err)
-			return nil
+			errList = append(errList, err)
+			continue
 		}
 
 		if err = sqlDb.Ping(); err != nil {
-			// 处理错误
-			tools.HandlePanicError(err)
-			return nil
+			errList = append(errList, err)
+			continue
 		}
 
 		sqlDb.SetMaxOpenConns(conf.MaxOpen)
@@ -90,5 +90,5 @@ func InitMysql(dbItemList []*DbItemConfig) map[string]*gorm.DB {
 		// 处理错误
 		tools.HandlePanicError(errors.New(fmt.Sprintf("There must be a database with the alias %s.", defaultDbAlias)))
 	}
-	return dbMapClient
+	return dbMapClient, errList
 }

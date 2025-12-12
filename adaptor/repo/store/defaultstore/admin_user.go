@@ -3,6 +3,7 @@ package defaultstore
 import (
 	"context"
 	"gin-gorm-frame/adaptor"
+	"gin-gorm-frame/adaptor/redis"
 	"gin-gorm-frame/adaptor/repo/model"
 	"gin-gorm-frame/adaptor/repo/query"
 	"gin-gorm-frame/adaptor/repo/store"
@@ -17,12 +18,17 @@ type AdminUser struct {
 
 func NewAdminUser(adaptor adaptor.IAdaptor) *AdminUser {
 
+	redisClient, err := adaptor.GetRedis(redis.DefaultRedisAlias)
+	if err != nil {
+		panic("redis-alias(default) instance is not exist")
+	}
+
 	return &AdminUser{
 		DbBaseRepo: store.DbBaseRepo{
 			Db: adaptor.GetDB(dbAlias),
 		},
 		RedisBaseRepo: store.RedisBaseRepo{
-			Redis: adaptor.GetRedis(),
+			Redis: redisClient,
 		},
 	}
 }
