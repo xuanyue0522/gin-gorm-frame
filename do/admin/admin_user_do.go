@@ -1,4 +1,4 @@
-package admindo
+package admin
 
 type CreateUser struct {
 	AdminUserId int64

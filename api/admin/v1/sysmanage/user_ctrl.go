@@ -5,7 +5,7 @@ import (
 	"gin-gorm-frame/api"
 	commonCtrl "gin-gorm-frame/api/admin/common"
 	"gin-gorm-frame/common"
-	"gin-gorm-frame/dto/admindto"
+	"gin-gorm-frame/dto/admin"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +19,7 @@ func (c *Ctrl) CreateUser(ctx *gin.Context) {
 	}
 
 	// 获取并绑定请求数据
-	req := &admindto.CreateUserReq{}
+	req := &admin.CreateUserReq{}
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		api.WriteResp(ctx, nil, common.ParamError.WithErr(err))
 		return

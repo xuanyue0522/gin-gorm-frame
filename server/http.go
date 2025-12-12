@@ -51,23 +51,48 @@ func newApp(port int, router router.IRouter) *App {
 }
 
 // StartHttpServer 启动http服务
-func StartHttpServer(conf *config.Config, db *gorm.DB, redis *redis.Client) {
+func StartHttpServer(conf *config.Config, dbMap map[string]*gorm.DB, redisMap map[string]*redis.Client) {
 
 	// 创建http服务器
 	app := newApp(conf.Server.HttpPort,
 		router.NewRouter(
 			conf,
-			adaptor.NewAdaptor(conf, db, redis),
+			adaptor.NewAdaptor(conf, dbMap, redisMap),
 			func() error {
-				err := func() error {
-					pingDb, err := db.DB()
-					tools.HandlePanicError(err)
-					return pingDb.Ping()
+
+				// 检查mysql连接是否正常
+				allDbErrMap := func() map[string]error {
+
+					errMap := make(map[string]error)
+					// 遍历dbMap，检查每个db的连接是否正常
+					for _, db := range dbMap {
+						pingDb, err := db.DB()
+						tools.HandlePanicError(err)
+						errMap[db.Name()] = pingDb.Ping()
+					}
+					return errMap
 				}()
-				if err != nil {
+				if len(allDbErrMap) > 0 {
 					return errors.New("mysql connect failed")
 				}
-				return redis.Ping().Err()
+
+				// 检查redis连接是否正常
+				allRedisErrMap := func() map[string]error {
+
+					errMap := make(map[string]error)
+					// 遍历dbMap，检查每个db的连接是否正常
+					for _, redisItem := range redisMap {
+						err := redisItem.Ping().Err()
+						if err != nil {
+							errMap[redisItem.Options().Addr+" - db:"+strconv.Itoa(redisItem.Options().DB)] = err
+						}
+					}
+					return errMap
+				}()
+				if len(allRedisErrMap) > 0 {
+					return errors.New("redis connect failed")
+				}
+				return nil
 			},
 		),
 	)

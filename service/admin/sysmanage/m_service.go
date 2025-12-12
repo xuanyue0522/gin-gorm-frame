@@ -2,7 +2,7 @@ package sysmanage
 
 import (
 	"gin-gorm-frame/adaptor"
-	"gin-gorm-frame/adaptor/repo/store"
+	"gin-gorm-frame/adaptor/repo/default/store"
 )
 
 type Service struct {

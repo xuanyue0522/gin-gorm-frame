@@ -6,6 +6,7 @@ package query
 
 import (
 	"context"
+	"gin-gorm-frame/adaptor/repo/default/model"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,8 +16,6 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
-
-	"gin-gorm-frame/adaptor/repo/model"
 )
 
 func newAdminUser(db *gorm.DB, opts ...gen.DOOption) adminUser {
