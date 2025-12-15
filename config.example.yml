@@ -5,7 +5,7 @@ server:
   log_level: debug
   env: dev
 
-# db 数据库(至少有一个数据库别名是 default)
+# db 数据库
 db:
   default_alias: default
   connections:
@@ -35,7 +35,7 @@ db:
       max_open: 20
       max_idle: 5
 
-# redis (至少有一个连接别名是 default)
+# redis
 redis:
   default_alias: default
   connections:
