@@ -5,7 +5,6 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"os"
-	"time"
 )
 
 var SugaredLogger *zap.SugaredLogger
@@ -24,7 +23,7 @@ func InitLogger(conf *LogConfig, appName string) error {
 
 	// 编码器配置
 	encoderConfig := zapcore.EncoderConfig{
-		TimeKey:        "time",
+		TimeKey:        "timestamp",
 		LevelKey:       "level",
 		NameKey:        "logger",
 		CallerKey:      "caller",
@@ -89,8 +88,7 @@ func InitLogger(conf *LogConfig, appName string) error {
 // 获取文件日志写入器 (支持轮转)
 func getFileLogWriter(conf *LogConfig) zapcore.WriteSyncer {
 
-	timeStr := time.Now().Format("20060102")
-	filename := conf.FilenamePrefix + timeStr + ".log"
+	filename := conf.FilenamePrefix + ".log"
 
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   conf.LogDir + "/" + filename,
@@ -133,6 +131,6 @@ func Error(msg string, fields ...zap.Field) {
 
 // 扩展额外日志字段
 func extFields(fields []zap.Field) []zap.Field {
-	fields = append(fields, zap.String("app", app), zap.Int64("timestamp", time.Now().Unix()))
+	fields = append(fields, zap.String("app", app))
 	return fields
 }
