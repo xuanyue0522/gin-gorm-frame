@@ -1,9 +1,9 @@
 package main
 
 import (
+	"gin-gorm-frame/components/logger"
 	"gin-gorm-frame/config"
 	"gin-gorm-frame/server"
-	"gin-gorm-frame/utils/logger"
 	"github.com/go-redis/redis"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -13,6 +13,8 @@ func main() {
 
 	// 初始化应用
 	app := initApp()
+
+	defer logger.Sync()
 
 	// 启动http服务
 	server.StartHttpServer(app.conf, app.dbMapClient, app.rdsMapClient)
@@ -29,8 +31,11 @@ func initApp() *app {
 	// 初始化配置信息
 	conf := config.InitConfig()
 
-	// 设置日志级别
-	logger.SetLevel(conf.Server.LogLevel)
+	// 初始化日志
+	err := logger.InitLogger(&conf.LogConf, conf.Server.AppName)
+	if err != nil {
+		panic(err)
+	}
 
 	// 初始化mysql
 	dbMapClient, dbErrList := config.InitMysql(conf.Db.DefaultAlias, conf.Db.Connections)

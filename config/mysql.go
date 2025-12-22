@@ -3,7 +3,7 @@ package config
 import (
 	"errors"
 	"fmt"
-	"gin-gorm-frame/utils/logger"
+	"gin-gorm-frame/components/logger"
 	"gin-gorm-frame/utils/tools"
 	"github.com/samber/lo"
 	"gorm.io/driver/mysql"

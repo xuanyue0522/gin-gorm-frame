@@ -1,9 +1,22 @@
 # http 服务
 server:
+  app_name: cxs
   http_port: 8081
   enable_pprof: true
-  log_level: debug
   env: dev
+
+# 日志
+log:
+  level: debug
+  format: json
+  log_dir: ./logs # 日志存放目录，确保路径与Filebeat监控路径一致
+  filename_prefix: gin-gorm-frame
+  max_size: 100 # 日志文件最大大小，单位MB
+  max_backups: 30 # 旧日志文件最大保存数量
+  max_age: 30 # 日志文件最大保存时间，单位天
+  compress: true # 是否压缩日志文件
+  console_output: true # 是否打印到控制台
+
 
 # db 数据库
 db:

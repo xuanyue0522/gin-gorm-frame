@@ -2,3 +2,4 @@
 .vscode
 config.yml
 node_modules
+logs/*
