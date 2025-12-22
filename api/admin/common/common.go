@@ -2,8 +2,8 @@ package common
 
 import (
 	"gin-gorm-frame/common"
+	"gin-gorm-frame/components/logger"
 	"gin-gorm-frame/consts"
-	"gin-gorm-frame/utils/logger"
 	"github.com/gin-gonic/gin"
 )
 

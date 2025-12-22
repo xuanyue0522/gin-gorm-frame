@@ -426,7 +426,7 @@ func Error(msg string, fields ...zap.Field) {
 package main
 
 import (
-	"gin-gorm-frame/utils/logger"
+	"gin-gorm-frame/components/logger"
 	"go.uber.org/zap"
 	"gin-gorm-frame/common"
 )

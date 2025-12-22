@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"bytes"
+	"gin-gorm-frame/components/logger"
 	"gin-gorm-frame/consts"
-	"gin-gorm-frame/utils/logger"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"

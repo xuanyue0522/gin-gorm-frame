@@ -3,6 +3,8 @@ package config
 import (
 	"flag"
 	"fmt"
+	"gin-gorm-frame/components/logger"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/goccy/go-yaml"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/spf13/viper"
@@ -23,9 +25,10 @@ var (
 )
 
 type Config struct {
-	Server Server    `yaml:"server"`
-	Db     DbConfig  `yaml:"db"`
-	Redis  RedisConf `yaml:"redis"`
+	Server  Server           `yaml:"server"`
+	Db      DbConfig         `yaml:"db"`
+	Redis   RedisConf        `yaml:"redis"`
+	LogConf logger.LogConfig `yaml:"log"`
 }
 
 func init() {
@@ -75,7 +78,10 @@ func getFromRemoteAndWatchUpdate(v *viper.Viper) (*Config, error) {
 	}
 
 	// 反序列化到结构体
-	if err := v.Unmarshal(&tempConf); err != nil {
+	err := v.Unmarshal(&tempConf, func(config *mapstructure.DecoderConfig) {
+		config.TagName = "yaml"
+	})
+	if err != nil {
 		return nil, err
 	}
 
