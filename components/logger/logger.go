@@ -134,3 +134,19 @@ func extFields(fields []zap.Field) []zap.Field {
 	fields = append(fields, zap.String("app", app))
 	return fields
 }
+
+// 获取日志级别
+func getZapLevel(level string) zapcore.Level {
+	switch level {
+	case "debug":
+		return zapcore.DebugLevel
+	case "info":
+		return zapcore.InfoLevel
+	case "warn":
+		return zapcore.WarnLevel
+	case "error":
+		return zapcore.ErrorLevel
+	default:
+		return zapcore.InfoLevel
+	}
+}

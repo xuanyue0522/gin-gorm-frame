@@ -113,6 +113,11 @@ gin-gorm-frame/
 │    
 ├── common/                           # 公共包
 │   └── errors.go                     # 错误封装与错误码定义
+├── cpmponents/                       # 组件
+│   └── logger/                       # 日志组件
+│       ├── config.go                 # 日志组件配置文件
+│       ├── tools.go                  # 日志组件工具文件
+│       └── logger.go                 # 日志组件核心文件
 ├── config/                           # 配置包
 │   ├── config.go                     # 主配置文件
 │   ├── redis.go                      # redis 配置文件
@@ -152,9 +157,7 @@ gin-gorm-frame/
 │   └── db.sql                        # 数据库示例sql文件
 └── utils/                            # 工具箱
     ├── captcha/                      # 滑块验证码
-    │   └── captcha.go                
-    ├── logger/                       # 日志
-    │   └── logger.go                 
+    │   └── captcha.go                                
     ├── pool/                         # 协程池
     │   └── pool.go                   
     └── tools/                        # 工具
