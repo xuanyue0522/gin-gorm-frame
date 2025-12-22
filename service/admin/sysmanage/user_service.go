@@ -3,9 +3,9 @@ package sysmanage
 import (
 	"context"
 	"gin-gorm-frame/common"
+	"gin-gorm-frame/components/logger"
 	admindo "gin-gorm-frame/do/admin"
 	admindto "gin-gorm-frame/dto/admin"
-	"gin-gorm-frame/utils/logger"
 	"go.uber.org/zap"
 )
 
